@@ -1,3 +1,23 @@
+/* Importing the locally stored Segoe Print font */
+@font-face {
+  font-family: "SegoePrint";
+  src: url("../fonts/segoepr.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Apply the custom font to body or specific elements */
+body {
+  font-family: "SegoePrint", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.cont {
+  /* Example styling to apply font */
+  font-family: "SegoePrint", sans-serif;
+}
+
 .cont {
   position: relative;
   height: 100vh;
