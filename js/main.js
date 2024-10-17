@@ -1,18 +1,3 @@
-/*!
-
- =========================================================
- * Paper Kit 2 - v2.0.0
- =========================================================
-
- * Product Page: http://www.creative-tim.com/product/paper-kit-2
- * Copyright 2017 Creative Tim (http://www.creative-tim.com)
- * Licensed under MIT (https://github.com/timcreative/paper-kit/blob/master/LICENSE.md)
-
- =========================================================
-
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- */
-
  var searchVisible = 0;
  var transparent = true;
  
@@ -264,10 +249,7 @@
          }
  }
  
- // Returns a function, that, as long as it continues to be invoked, will not
- // be triggered. The function will be called after it stops being called for
- // N milliseconds. If `immediate` is passed, trigger the function on the
- // leading edge, instead of the trailing.
+
  
  function debounce(func, wait, immediate) {
      var timeout;
@@ -281,4 +263,14 @@
          if (immediate && !timeout) func.apply(context, args);
      };
  };
- 
+ // Add this in your main.js file or inside a <script> tag
+window.addEventListener('load', function () {
+    document.body.classList.add('loaded'); // Add 'loaded' class to body
+
+    // Fade out the overlay after page loads
+    const overlay = document.querySelector('.fade-in-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden'); // Hide the overlay
+        setTimeout(() => overlay.remove(), 1500); // Remove it after the animation
+    }
+});

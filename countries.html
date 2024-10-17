@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,600' rel='stylesheet' type='text/css'>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countries Slider</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap">
     <link rel="stylesheet" href="./css/countries.css">
-    <title>Document</title>
 </head>
-
 <body>
     <div class="cont">
         <div class="slider"></div>
-        <ul class="nav">
+        <ul class="nav"></ul>
     </div>
-    <div data-target='right' class="side-nav side-nav--right"></div>
-    <div data-target='left' class="side-nav side-nav--left"></div>
+    <div class="side-nav side-nav--right" data-target="right"></div>
+    <div class="side-nav side-nav--left" data-target="left"></div>
+    <div class="buttons-container">
+        <a href="index.html" class="btn back-btn">Back</a>
+        <a href="book_trip.html" class="btn book-trip">Book Trip</a>
+
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="./js/countries.js"></script>
 </body>
-
 </html>
