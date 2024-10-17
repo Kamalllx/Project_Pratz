@@ -1,40 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Glassmorf login form</title>
-            <link rel="stylesheet" href="./css/login.css">
-        </head>
-        <body>
-            <div class="maincontainer">
-                <form action="#">
-                    <h2>Login</h2>
-                    <div class="input-field">
-                        <input type="text" name="mail" id="mail" required>
-                        <label for="mail">Enter your E-mail</label>
-                    </div>
-                    <div class="input-field">
-                        <input type="password" name="password" id="password" required>
-                        <label for="password">Enter your Password</label>
-                    </div>
-        
-                    <div class="password-options">
-                        <label for="remember">
-                            <input type="checkbox" id="remember">
-                            <p>Remember me</p>
-                        </label>
-        
-                        <a href="#">Forgot Password</a>
-                    </div>
-        
-                    <button type="submit">Log In</button>
-        
-                    <div class="account-options">
-                        <p>Don't have an account?<a href="#">Register</a></p>
-                    </div>
-        
-                </form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glassmorf Login Form</title>
+    <link rel="stylesheet" href="./css/login.css">
+    <script>
+        function validateLogin(event) {
+            event.preventDefault(); // Prevent the form from submitting
+            
+            // Get the input values
+            const email = document.getElementById("mail").value;
+            const password = document.getElementById("password").value;
+
+            // Check if the email and password are both "admin"
+            if (email === "admin" && password === "admin") {
+                // Redirect to admin.html if the credentials are correct
+                window.location.href = "admin.html";
+            } else {
+                // Optionally, show an alert or some message if credentials are incorrect
+                alert("Invalid credentials. Please try again.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="maincontainer">
+        <form onsubmit="validateLogin(event)">
+            <h2>Login</h2>
+            <div class="input-field">
+                <input type="text" name="mail" id="mail" required>
+                <label for="mail">Enter your E-mail</label>
             </div>
-        </body>
-        </html>
+            <div class="input-field">
+                <input type="password" name="password" id="password" required>
+                <label for="password">Enter your Password</label>
+            </div>
+
+            <div class="password-options">
+                <label for="remember">
+                    <input type="checkbox" id="remember">
+                    <p>Remember me</p>
+                </label>
+
+                <a href="#">Forgot Password</a>
+            </div>
+
+            <button type="submit">Log In</button>
+
+            <div class="account-options">
+                <p>Don't have an account?<a href="#">Register</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

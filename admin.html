@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+    />
+
+    <link rel="stylesheet" href="./css/admin.css" />
+
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script defer src="./js/admin.js"></script>
+    <title>Admin Dashboard</title>
+  </head>
+  <body>
+    <main>
+        <aside>
+            <ul class="Links">
+              <li onclick="Navigate(0)" class="activeLink">
+                <i class="fa-solid fa-house"></i>
+                <p>Dashboard</p>
+              </li>
+              <li onclick="Navigate(1)">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <p>Trips Management</p>
+              </li>
+              <li onclick="Navigate(2)">
+                <i class="fa-solid fa-users"></i>
+                <p>Users Management</p>
+              </li>
+              <li onclick="Navigate(3)">
+                <i class="fa-solid fa-credit-card"></i>
+                <p>Payments</p>
+              </li>
+            </ul>
+          </aside>
+
+      <!-- Swiper for Different Sections -->
+      <div class="swiper mySwiper" style="width: 86%; height: 100%">
+        <div class="SlideContainer swiper-wrapper">
+          <!-- Dashboard Analytics Slide -->
+          <div class="swiper-slide home-slide">
+            <div class="HomeContent" data-aos="fade-up">
+              <h1 class="heading">Dashboard Overview</h1>
+
+              <!-- Metrics Section -->
+              <div class="metrics-container">
+                <div class="metric-card">
+                  <i class="fa-solid fa-users"></i>
+                  <h2>Total Users</h2>
+                  <p>2500</p>
+                </div>
+                <div class="metric-card">
+                  <i class="fa-solid fa-map-location-dot"></i>
+                  <h2>Total Trips</h2>
+                  <p>1500</p>
+                </div>
+                <div class="metric-card">
+                  <i class="fa-solid fa-dollar-sign"></i>
+                  <h2>Revenue</h2>
+                  <p>$120,000</p>
+                </div>
+                <div class="metric-card">
+                  <i class="fa-solid fa-credit-card"></i>
+                  <h2>Pending Payments</h2>
+                  <p>75</p>
+                </div>
+              </div>
+              <div class="container">
+                <!-- Recent Bookings Section -->
+                <div class="recent-bookings">
+                  <h2>Recent Bookings</h2>
+                  <ul>
+                    <li><strong>Paris - John Doe - Oct 15, 2024</strong></li>
+                    <li><strong>Tokyo - Jane Smith - Oct 14, 2024</strong></li>
+                    <li><strong>Bali - Michael Lee - Oct 13, 2024</strong></li>
+                  </ul>
+                </div>
+                <!-- Top 5 Popular Destinations -->
+                <div class="popular-destinations">
+                  <h2>Top 5 Popular Destinations</h2>
+                  <ul>
+                    <li><strong>Paris - 4532 bookings</strong></li>
+                    <li><strong>Tokyo - 3621 bookings</strong></li>
+                    <li><strong>New York - 2985 bookings</strong></li>
+                    <li><strong>Bali - 2873 bookings</strong></li>
+                    <li><strong>Rome - 2541 bookings</strong></li>
+                  </ul>
+                </div>
+                <!-- Revenue Breakdown (Bar Chart) -->
+                <div class="chart-container">
+                  <h2>Revenue Breakdown by Destination</h2>
+                  <canvas
+                    id="revenueChart"
+                    style="width: 100%; max-height: 400px"
+                  ></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="trips-management" data-aos="fade-up">
+              <h1 class="heading">Statistics</h1>
+              <div class="table-section">
+                <table class="packages-table">
+                  <thead>
+                    <tr>
+                      <th>Package Name</th>
+                      <th>Duration</th>
+                      <th>Price</th>
+                      <th>Available Slots</th>
+                      <th>Status</th>
+                      <th>Next Available Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="packagesTableBody">
+                    <!-- Table data will be populated by JavaScript -->
+                  </tbody>
+                </table>
+                <button class="add-package-btn" onclick="openModal()">
+                  Add Package
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal (Popup) -->
+          <div id="packageModal" class="modal">
+            <div class="modal-content">
+              <span class="close" onclick="closeModal()">&times;</span>
+              <h2>Add New Package</h2>
+              <form id="packageForm">
+                <label for="name">Package Name</label>
+                <input type="text" id="name" name="name" required />
+
+                <label for="duration">Duration (days)</label>
+                <input type="number" id="duration" name="duration" required />
+
+                <label for="price">Price ($)</label>
+                <input type="number" id="price" name="price" required />
+
+                <label for="slots">Available Slots</label>
+                <input type="number" id="slots" name="slots" required />
+
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                  <option value="active">Active</option>
+                  <option value="soldout">Sold Out</option>
+                </select>
+
+                <label for="nextDate">Next Available Date</label>
+                <input type="date" id="nextDate" name="nextDate" required />
+
+                <button type="submit">Add Package</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Users Management Slide -->
+          <div class="swiper-slide">
+            <div class="users-management" data-aos="fade-up">
+              <h1 class="heading">Users Management</h1>
+              <div class="UM">
+                <div class="content-wrapper">
+                    <div class="user-data">
+                        <ul class="user-list">
+                            <li>
+                                <span class="user-name">John Doe</span>
+                                <span class="user-email">john@example.com</span>
+                                <span class="user-phone">+1 234 567 890</span>
+                                <span class="user-destination">Paris, France</span>
+                                <span class="user-date">Travel Date: 2024-11-05</span>
+                            </li>
+                            <li>
+                                <span class="user-name">Jane Smith</span>
+                                <span class="user-email">jane@example.com</span>
+                                <span class="user-phone">+1 987 654 321</span>
+                                <span class="user-destination">Tokyo, Japan</span>
+                                <span class="user-date">Travel Date: 2024-12-10</span>
+                            </li>
+                            <li>
+                                <span class="user-name">Alice Johnson</span>
+                                <span class="user-email">alice@example.com</span>
+                                <span class="user-phone">+44 765 432 109</span>
+                                <span class="user-destination">New York, USA</span>
+                                <span class="user-date">Travel Date: 2024-10-25</span>
+                            </li>
+                            <li>
+                                <span class="user-name">Michael Brown</span>
+                                <span class="user-email">michael@example.com</span>
+                                <span class="user-phone">+61 123 456 789</span>
+                                <span class="user-destination">Sydney, Australia</span>
+                                <span class="user-date">Travel Date: 2025-01-15</span>
+                            </li>
+                            <li>
+                                <span class="user-name">Emma Wilson</span>
+                                <span class="user-email">emma@example.com</span>
+                                <span class="user-phone">+49 987 654 321</span>
+                                <span class="user-destination">Berlin, Germany</span>
+                                <span class="user-date">Travel Date: 2024-11-20</span>
+                            </li>
+                        </ul>
+                    </div>
+            
+                    <div class="statistics-container">
+                        <div class="charts-section">
+                            <div class="chart-container">
+                                <h2>Bookings Per Month</h2>
+                                <canvas id="bookingsChart" style="scale: 1.1"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h2>User Demographics</h2>
+                                <canvas id="demographicsChart" style="scale: 1.1"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            </div>
+          </div>
+
+          <!-- Payments Overview Slide -->
+          <div class="swiper-slide">
+            <div class="payments-overview" data-aos="fade-up">
+              <h1 class="heading">Feedback & Ratings</h1>
+
+              <!-- Filter by Destination -->
+              <div class="filter-section">
+                <label for="destination-filter">Filter by Destination:</label>
+                <select id="destination-filter" onchange="filterFeedback()">
+                  <option value="all">All</option>
+                  <option value="Paris">Paris</option>
+                  <option value="Tokyo">Tokyo</option>
+                  <option value="New York">New York</option>
+                  <option value="Bali">Bali</option>
+                  <option value="Rome">Rome</option>
+                </select>
+              </div>
+
+              <!-- Feedback Table -->
+              <div class="feedback-container">
+                <table class="feedback-table">
+                  <thead>
+                    <tr>
+                      <th>Destination</th>
+                      <th>Customer</th>
+                      <th>Feedback</th>
+                      <th>Rating</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="feedbackTableBody">
+                    <!-- Feedback will be dynamically populated -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Average Ratings Chart -->
+              <!-- Average Ratings and Customer Satisfaction Section -->
+              <div class="chart-container">
+                <h2>Travel Insights</h2>
+                <div class="charts-wrapper">
+                  <div class="chart-box">
+                    <canvas id="ratingsChart"></canvas>
+                    <h3>Average Ratings by Destination</h3>
+                  </div>
+                  <div class="chart-box">
+                    <canvas id="satisfactionChart"></canvas>
+                    <h3>Customer Satisfaction Over Time</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+  <script>
+    const packages = [
+      {
+        name: "Paris",
+        duration: 7,
+        price: 2499,
+        slots: 15,
+        status: "active",
+        nextDate: "2024-11-15",
+      },
+      {
+        name: "Tokyo",
+        duration: 10,
+        price: 3299,
+        slots: 0,
+        status: "soldout",
+        nextDate: "2024-12-01",
+      },
+      {
+        name: "New York",
+        duration: 5,
+        price: 1899,
+        slots: 8,
+        status: "active",
+        nextDate: "2024-10-20",
+      },
+      {
+        name: "Bali",
+        duration: 8,
+        price: 2199,
+        slots: 12,
+        status: "active",
+        nextDate: "2024-11-05",
+      },
+      {
+        name: "Rome",
+        duration: 6,
+        price: 2099,
+        slots: 3,
+        status: "active",
+        nextDate: "2024-10-30",
+      },
+    ];
+
+    // Function to render the table
+    function renderTable() {
+      const tableBody = document.getElementById("packagesTableBody");
+      tableBody.innerHTML = "";
+
+      packages.forEach((pkg) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+                <td>${pkg.name}</td>
+                <td>${pkg.duration} days</td>
+                <td>$${pkg.price.toLocaleString()}</td>
+                <td>${pkg.slots}</td>
+                <td><span class="status-${pkg.status}">${
+          pkg.status.charAt(0).toUpperCase() + pkg.status.slice(1)
+        }</span></td>
+                <td>${new Date(pkg.nextDate).toLocaleDateString()}</td>
+              `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Function to open the modal
+    function openModal() {
+      document.getElementById("packageModal").style.display = "block";
+    }
+
+    // Function to close the modal
+    function closeModal() {
+      document.getElementById("packageModal").style.display = "none";
+    }
+
+    // Function to add a new package
+    document
+      .getElementById("packageForm")
+      .addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const newPackage = {
+          name: document.getElementById("name").value,
+          duration: document.getElementById("duration").value,
+          price: document.getElementById("price").value,
+          slots: document.getElementById("slots").value,
+          status: document.getElementById("status").value,
+          nextDate: document.getElementById("nextDate").value,
+        };
+
+        packages.push(newPackage);
+        renderTable();
+        closeModal();
+      });
+
+    // Initial render
+    renderTable();
+  </script>
+</html>

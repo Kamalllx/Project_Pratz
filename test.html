@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .charts-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .packages-section {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .add-package-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-package-btn:hover {
+            background: #45a049;
+        }
+
+        .packages-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .packages-table th,
+        .packages-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .packages-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .packages-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="charts-section">
+            <div class="chart-container">
+                <h2>Bookings Per Month</h2>
+                <canvas id="bookingsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h2>User Demographics</h2>
+                <canvas id="demographicsChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="packages-section">
+            <div class="section-header">
+                <h2>Available Packages</h2>
+                <button class="add-package-btn" onclick="openModal()">
+                    <span>+</span> Add Package
+                </button>
+            </div>
+            <table class="packages-table">
+                <thead>
+                    <tr>
+                        <th>Destination</th>
+                        <th>Price</th>
+                        <th>Duration</th>
+                        <th>Availability</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+                <tbody id="packagesTableBody">
+                    <!-- Table content will be added dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="addPackageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Package</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="addPackageForm">
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <input type="text" id="destination" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="text" id="price" required>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration</label>
+                    <input type="text" id="duration" required>
+                </div>
+                <div class="form-group">
+                    <label for="availability">Availability</label>
+                    <input type="number" id="availability" required>
+                </div>
+                <div class="form-group">
+                    <label for="rating">Rating</label>
+                    <input type="number" id="rating" step="0.1" min="0" max="5" required>
+                </div>
+                <button type="submit" class="submit-btn">Add Package</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initial packages data
+        let packages = [
+            { destination: "Paris", price: "$2,500", duration: "7 days", availability: 15, rating: 4.8 },
+            { destination: "Tokyo", price: "$3,200", duration: "10 days", availability: 8, rating: 4.9 },
+            { destination: "New York", price: "$2,800", duration: "5 days", availability: 12, rating: 4.7 },
+            { destination: "Bali", price: "$2,200", duration: "8 days", availability: 20, rating: 4.6 },
+            { destination: "Rome", price: "$2,400", duration: "6 days", availability: 10, rating: 4.8 }
+        ];
+
+        // Chart data
+        const bookingsData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Bookings',
+                data: [65, 85, 120, 90, 110, 130],
+                borderColor: '#4CAF50',
+                tension: 0.1
+            }]
+        };
+
+        const demographicsData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [
+                {
+                    label: 'Seniors',
+                    data: [20, 25, 30, 22, 28, 32],
+                    borderColor: '#FF6384',
+                    tension: 0.1
+                },
+                {
+                    label: 'Adults',
+                    data: [45, 50, 60, 48, 55, 58],
+                    borderColor: '#36A2EB',
+                    tension: 0.1
+                },
+                {
+                    label: 'Youth',
+                    data: [35, 40, 45, 38, 42, 48],
+                    borderColor: '#FFCE56',
+                    tension: 0.1
+                }
+            ]
+        };
+
+        // Initialize charts
+        const bookingsChart = new Chart(
+            document.getElementById('bookingsChart'),
+            {
+                type: 'line',
+                data: bookingsData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            }
+        );
+
+        const demographicsChart = new Chart(
+            document.getElementById('demographicsChart'),
+            {
+                type: 'line',
+                data: demographicsData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            }
+        );
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('addPackageModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('addPackageModal').style.display = 'none';
+        }
+
+        // Render packages table
+        function renderPackagesTable() {
+            const tableBody = document.getElementById('packagesTableBody');
+            tableBody.innerHTML = '';
+            
+            packages.forEach(pkg => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${pkg.destination}</td>
+                    <td>${pkg.price}</td>
+                    <td>${pkg.duration}</td>
+                    <td>${pkg.availability}</td>
+                    <td>${pkg.rating}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Form submission
+        document.getElementById('addPackageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newPackage = {
+                destination: document.getElementById('destination').value,
+                price: document.getElementById('price').value,
+                duration: document.getElementById('duration').value,
+                availability: document.getElementById('availability').value,
+                rating: document.getElementById('rating').value
+            };
+
+            packages.push(newPackage);
+            renderPackagesTable();
+            closeModal();
+            this.reset();
+        });
+
+        // Initial render
+        renderPackagesTable();
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('addPackageModal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
